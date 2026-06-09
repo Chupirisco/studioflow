@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studioflow/core/styles/box_shadow.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../core/navigator/app_navigator.dart';
 import '../../../core/theme/app_theme.dart';
@@ -156,6 +157,7 @@ class _ClientesPageState extends State<ClientesPage> {
                     ),
                   )
                 : GridView.builder(
+                    clipBehavior: Clip.none,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -214,15 +216,7 @@ class _CardClienteState extends State<_CardCliente> {
                     ? AppTheme.primary.withValues(alpha: 0.35)
                     : AppTheme.border,
               ),
-              boxShadow: _hovered
-                  ? [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.11),
-                        blurRadius: 18,
-                        offset: const Offset(0, 4),
-                      ),
-                    ]
-                  : AppTheme.cardShadow,
+              boxShadow: _hovered ? [sombreamento()] : AppTheme.cardShadow,
             ),
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -290,23 +284,25 @@ class _CardClienteState extends State<_CardCliente> {
 
                 // Badge status
                 // Ativo: borda/texto verde #3DA35C | Inativo: cinza
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: c.ativo ? AppTheme.green : AppTheme.textSecondary,
+                Align(
+                  alignment: AlignmentGeometry.centerRight,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 3,
                     ),
-                  ),
-                  child: Text(
-                    c.ativo ? 'Ativo' : 'Inativo',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: c.ativo ? AppTheme.green : AppTheme.textSecondary,
+                    decoration: BoxDecoration(
+                      boxShadow: [sombreamento()],
+                      color: AppTheme.background,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      c.ativo ? 'Ativo' : 'Inativo',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: c.ativo ? AppTheme.green : AppTheme.amber,
+                      ),
                     ),
                   ),
                 ),

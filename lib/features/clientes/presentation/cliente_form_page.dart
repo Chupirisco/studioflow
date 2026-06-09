@@ -5,6 +5,7 @@ import '../../../core/di/service_locator.dart';
 import '../../../core/navigator/app_navigator.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
+import '../../../shared/widgets/app_bar_interna.dart';
 
 class ClienteFormPage extends StatefulWidget {
   final Object? args;
@@ -67,59 +68,66 @@ class _ClienteFormPageState extends State<ClienteFormPage> {
       body: Stack(
         children: [
           // ── CONTEÚDO ──────────────────────────────────
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildField(
-                    label: 'Nome do cliente',
-                    controller: _nomeController,
-                    hint: 'Ex.: Fulano',
-                    validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Informe o nome'
-                        : null,
+          ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              // ── TOPBAR ──────────────────────────────────
+              AppBarInterna(titulo: 'Cadastrar cliente'),
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildField(
+                        label: 'Nome do cliente',
+                        controller: _nomeController,
+                        hint: 'Ex.: Fulano',
+                        validator: (v) => (v == null || v.trim().isEmpty)
+                            ? 'Informe o nome'
+                            : null,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildField(
+                        label: 'Nome da empresa',
+                        controller: _empresaController,
+                        hint: 'Ex.: Empresa Y',
+                        validator: (v) => (v == null || v.trim().isEmpty)
+                            ? 'Informe a empresa'
+                            : null,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildField(
+                        label: 'Nº de telefone',
+                        controller: _telefoneController,
+                        hint: '(00) 00000-0000',
+                        keyboardType: TextInputType.phone,
+                        formatters: [_telefoneMask],
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) {
+                            return 'Informe o telefone';
+                          }
+                          if (_telefoneMask.getUnmaskedText().length < 10) {
+                            return 'Telefone inválido';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      _buildField(
+                        label: 'Descrição',
+                        controller: _descricaoController,
+                        hint: 'Algo sobre a empresa...',
+                        maxLines: 8,
+                        validator: null,
+                      ),
+                      const SizedBox(height: 100),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  _buildField(
-                    label: 'Nome da empresa',
-                    controller: _empresaController,
-                    hint: 'Ex.: Empresa Y',
-                    validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Informe a empresa'
-                        : null,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildField(
-                    label: 'Nº de telefone',
-                    controller: _telefoneController,
-                    hint: '(00) 00000-0000',
-                    keyboardType: TextInputType.phone,
-                    formatters: [_telefoneMask],
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) {
-                        return 'Informe o telefone';
-                      }
-                      if (_telefoneMask.getUnmaskedText().length < 10) {
-                        return 'Telefone inválido';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  _buildField(
-                    label: 'Descrição',
-                    controller: _descricaoController,
-                    hint: 'Algo sobre a empresa...',
-                    maxLines: 8,
-                    validator: null,
-                  ),
-                  const SizedBox(height: 100),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
 
           // ── BOTÃO CONFIRMAR (fixo canto inferior direito) ──

@@ -97,14 +97,7 @@ class _AppShellState extends State<AppShell> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                const Text(
-                  'StudioFlow',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.primary,
-                  ),
-                ),
+                Image.asset('assets/logo.png'),
                 const Spacer(),
                 Text(
                   _formatDate(DateTime.now()),
@@ -128,39 +121,44 @@ class _AppShellState extends State<AppShell> {
                   child: Column(
                     children: [
                       const SizedBox(height: 16),
-                      ...List.generate(_navItems.length, (i) {
-                        final active = _sidebarIndex == i;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 2,
-                          ),
-                          child: Tooltip(
-                            message: _navItems[i].label,
-                            child: InkWell(
-                              onTap: () => _onNavTap(i),
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: active
-                                      ? AppTheme.primaryLight
-                                      : Colors.transparent,
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: _navItems.length,
+                          itemBuilder: (context, index) {
+                            final active = _sidebarIndex == index;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 2,
+                              ),
+                              child: Tooltip(
+                                message: _navItems[index].label,
+                                child: InkWell(
+                                  onTap: () => _onNavTap(index),
                                   borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  _navItems[i].icon,
-                                  size: 20,
-                                  color: active
-                                      ? AppTheme.primary
-                                      : AppTheme.textSecondary,
+                                  child: Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      color: active
+                                          ? AppTheme.primaryLight
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Icon(
+                                      _navItems[index].icon,
+                                      size: 20,
+                                      color: active
+                                          ? AppTheme.primary
+                                          : AppTheme.textSecondary,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        );
-                      }),
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),

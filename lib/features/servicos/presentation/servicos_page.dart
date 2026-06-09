@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../core/navigator/app_navigator.dart';
+import '../../../core/styles/box_shadow.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
 import 'servicos_viewmodel.dart';
@@ -156,6 +157,7 @@ class _ServicosPageState extends State<ServicosPage> {
                     ),
                   )
                 : GridView.builder(
+                    clipBehavior: Clip.none,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -189,11 +191,7 @@ class _CardServicoState extends State<_CardServico> {
   bool _hovered = false;
 
   static const _tipoLabel = ['Criação', 'Alteração', 'Correção'];
-  static const _tipoColor = [
-    AppTheme.primary,
-    AppTheme.amber,
-    Color(0xFFE05252),
-  ];
+  static const _tipoColor = [AppTheme.green, AppTheme.primary, AppTheme.amber];
 
   String _formatarData(DateTime dt) => DateFormat('dd/MM/yyyy').format(dt);
 
@@ -229,15 +227,8 @@ class _CardServicoState extends State<_CardServico> {
                     ? AppTheme.primary.withValues(alpha: 0.35)
                     : AppTheme.border,
               ),
-              boxShadow: _hovered
-                  ? [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.11),
-                        blurRadius: 18,
-                        offset: const Offset(0, 4),
-                      ),
-                    ]
-                  : AppTheme.cardShadow,
+              // Padronizado com clientes_page: usa sombreamento()
+              boxShadow: _hovered ? [sombreamento()] : AppTheme.cardShadow,
             ),
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -290,7 +281,7 @@ class _CardServicoState extends State<_CardServico> {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: tipoColor,
+                            color: AppTheme.textPrimary,
                           ),
                         ),
                       ],
@@ -346,6 +337,7 @@ class _CardServicoState extends State<_CardServico> {
                 ),
 
                 // ── FOOTER: STATUS ──────────────────────
+                // Padronizado com clientes_page: badge com background + borderRadius 5
                 Align(
                   alignment: Alignment.centerRight,
                   child: Container(
@@ -354,16 +346,16 @@ class _CardServicoState extends State<_CardServico> {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: isPendente ? AppTheme.amber : AppTheme.green,
-                      ),
+                      boxShadow: [sombreamento()],
+                      color: AppTheme.background,
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Text(
                       isPendente ? 'Pendente' : 'Finalizado',
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
+                        // Pendente: âmbar #F5A02F | Finalizado: verde #3DA35C
                         color: isPendente ? AppTheme.amber : AppTheme.green,
                       ),
                     ),

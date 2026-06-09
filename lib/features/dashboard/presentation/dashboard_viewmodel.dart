@@ -8,6 +8,9 @@ class DashboardViewModel extends ChangeNotifier {
   List<Servico> _servicosPendentes = [];
   List<Servico> get servicosPendentes => _servicosPendentes;
 
+  // Expõe a lista completa sem paginação (usada pelo PageView do card)
+  List<Servico> get todosPendentes => _servicosPendentes;
+
   double _totalRecebido = 0;
   double get totalRecebido => _totalRecebido;
 

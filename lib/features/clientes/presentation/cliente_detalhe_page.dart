@@ -5,6 +5,7 @@ import '../../../core/di/service_locator.dart';
 import '../../../core/navigator/app_navigator.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
+import '../../../shared/widgets/app_bar_interna.dart';
 
 class ClienteDetalhePage extends StatefulWidget {
   final Object? args;
@@ -190,6 +191,8 @@ class _ClienteDetalhePageState extends State<ClienteDetalhePage> {
       backgroundColor: AppTheme.background,
       body: Column(
         children: [
+          // ── TOPBAR ──────────────────────────────────
+          AppBarInterna(titulo: 'Editar cliente'),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),

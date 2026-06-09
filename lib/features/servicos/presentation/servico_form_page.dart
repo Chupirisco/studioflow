@@ -5,6 +5,7 @@ import '../../../core/di/service_locator.dart';
 import '../../../core/navigator/app_navigator.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
+import '../../../shared/widgets/app_bar_interna.dart';
 
 class ServicoFormPage extends StatefulWidget {
   final Object? args;
@@ -247,162 +248,174 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
       body: Stack(
         children: [
           // ── CONTEÚDO ──────────────────────────────────
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ── EMPRESA (autocomplete) ─────────────
-                  _buildLabel('Empresa'),
-                  const SizedBox(height: 6),
-                  _buildEmpresaField(),
-                  const SizedBox(height: 16),
+          ListView(
+            padding: EdgeInsets.zero,
 
-                  // ── NOME DO CLIENTE (read-only) ─────────
-                  _buildLabel('Nome do cliente'),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _nomeClienteController,
-                    readOnly: true,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: AppTheme.textSecondary,
-                    ),
-                    decoration: _inputDecoration(
-                      '',
-                    ).copyWith(fillColor: AppTheme.background, hintText: ''),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // ── NOME DO PRODUTO ────────────────────
-                  _buildLabel('Nome do produto'),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _nomeProdutoController,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: AppTheme.textPrimary,
-                    ),
-                    validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Informe o nome do produto'
-                        : null,
-                    decoration: _inputDecoration('Ex.: Café premium'),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // ── LINHA: VALOR | STATUS | TIPO ────────
-                  Row(
+            children: [
+              // ── TOPBAR ──────────────────────────────────
+              AppBarInterna(titulo: 'Cadastrar serviço'),
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
+                      // ── EMPRESA (autocomplete) ─────────────
+                      _buildLabel('Empresa'),
+                      const SizedBox(height: 6),
+                      _buildEmpresaField(),
+                      const SizedBox(height: 16),
+
+                      // ── NOME DO CLIENTE (read-only) ─────────
+                      _buildLabel('Nome do cliente'),
+                      const SizedBox(height: 6),
+                      TextFormField(
+                        controller: _nomeClienteController,
+                        readOnly: true,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppTheme.textSecondary,
+                        ),
+                        decoration: _inputDecoration('').copyWith(
+                          fillColor: AppTheme.background,
+                          hintText: '',
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // ── NOME DO PRODUTO ────────────────────
+                      _buildLabel('Nome do produto'),
+                      const SizedBox(height: 6),
+                      TextFormField(
+                        controller: _nomeProdutoController,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppTheme.textPrimary,
+                        ),
+                        validator: (v) => (v == null || v.trim().isEmpty)
+                            ? 'Informe o nome do produto'
+                            : null,
+                        decoration: _inputDecoration('Ex.: Café premium'),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // ── LINHA: VALOR | STATUS | TIPO ────────
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildLabel('Valor'),
-                          const SizedBox(height: 6),
-                          SizedBox(
-                            width: 160,
-                            child: TextFormField(
-                              controller: _valorController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              onChanged: _onValorChanged,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: AppTheme.textPrimary,
-                              ),
-                              decoration: _inputDecoration('').copyWith(
-                                prefixText: 'R\$ ',
-                                prefixStyle: const TextStyle(
-                                  fontSize: 13,
-                                  color: AppTheme.textPrimary,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildLabel('Valor'),
+                              const SizedBox(height: 6),
+                              SizedBox(
+                                width: 160,
+                                child: TextFormField(
+                                  controller: _valorController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  onChanged: _onValorChanged,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: AppTheme.textPrimary,
+                                  ),
+                                  decoration: _inputDecoration('').copyWith(
+                                    prefixText: 'R\$ ',
+                                    prefixStyle: const TextStyle(
+                                      fontSize: 13,
+                                      color: AppTheme.textPrimary,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(width: 16),
+                          const SizedBox(width: 16),
 
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildLabel('Status'),
-                          const SizedBox(height: 6),
-                          _buildDropdownField(
-                            value: _statusServico,
-                            items: const [
-                              DropdownMenuItem(
-                                value: 0,
-                                child: Text('Pendente'),
-                              ),
-                              DropdownMenuItem(
-                                value: 1,
-                                child: Text('Finalizado'),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildLabel('Status'),
+                              const SizedBox(height: 6),
+                              _buildDropdownField(
+                                value: _statusServico,
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 0,
+                                    child: Text('Pendente'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 1,
+                                    child: Text('Finalizado'),
+                                  ),
+                                ],
+                                onChanged: (v) {
+                                  if (v != null) {
+                                    setState(() => _statusServico = v);
+                                  }
+                                },
+                                valueColor: _statusServico == 0
+                                    ? AppTheme.amber
+                                    : AppTheme.green,
                               ),
                             ],
-                            onChanged: (v) {
-                              if (v != null) setState(() => _statusServico = v);
-                            },
-                            valueColor: _statusServico == 0
-                                ? AppTheme.amber
-                                : AppTheme.green,
                           ),
-                        ],
-                      ),
-                      const SizedBox(width: 16),
+                          const SizedBox(width: 16),
 
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildLabel('Tipo'),
-                          const SizedBox(height: 6),
-                          _buildDropdownField(
-                            value: _tipoServico,
-                            items: const [
-                              DropdownMenuItem(
-                                value: 0,
-                                child: Text('Criação'),
-                              ),
-                              DropdownMenuItem(
-                                value: 1,
-                                child: Text('Alteração'),
-                              ),
-                              DropdownMenuItem(
-                                value: 2,
-                                child: Text('Correção'),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildLabel('Tipo'),
+                              const SizedBox(height: 6),
+                              _buildDropdownField(
+                                value: _tipoServico,
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 0,
+                                    child: Text('Criação'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 1,
+                                    child: Text('Alteração'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 2,
+                                    child: Text('Correção'),
+                                  ),
+                                ],
+                                onChanged: (v) {
+                                  if (v != null)
+                                    setState(() => _tipoServico = v);
+                                },
                               ),
                             ],
-                            onChanged: (v) {
-                              if (v != null) setState(() => _tipoServico = v);
-                            },
                           ),
                         ],
                       ),
+                      const SizedBox(height: 16),
+
+                      // ── DESCRIÇÃO ──────────────────────────
+                      _buildLabel('Descrição'),
+                      const SizedBox(height: 6),
+                      TextFormField(
+                        controller: _descricaoController,
+                        maxLines: 8,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppTheme.textPrimary,
+                        ),
+                        decoration: _inputDecoration('Algo sobre o serviço...'),
+                      ),
+
+                      const SizedBox(height: 100),
                     ],
                   ),
-                  const SizedBox(height: 16),
-
-                  // ── DESCRIÇÃO ──────────────────────────
-                  _buildLabel('Descrição'),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _descricaoController,
-                    maxLines: 8,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: AppTheme.textPrimary,
-                    ),
-                    decoration: _inputDecoration('Algo sobre o serviço...'),
-                  ),
-
-                  const SizedBox(height: 100),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
 
           // ── BOTÃO CONFIRMAR ────────────────────────────

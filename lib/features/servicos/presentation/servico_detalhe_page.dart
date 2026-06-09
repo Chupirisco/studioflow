@@ -6,6 +6,8 @@ import '../../../core/navigator/app_navigator.dart';
 import '../../../core/theme/app_theme.dart';
 import 'package:drift/drift.dart' show Value;
 
+import '../../../shared/widgets/app_bar_interna.dart';
+
 class ServicoDetalhePage extends StatefulWidget {
   final Object? args;
 
@@ -173,32 +175,7 @@ class _ServicoDetalhePageState extends State<ServicoDetalhePage> {
       body: Column(
         children: [
           // ── TOPBAR ──────────────────────────────────
-          Container(
-            height: 52,
-            color: AppTheme.surface,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => getIt<AppNavigator>().voltar(),
-                  icon: const Icon(Icons.arrow_back_ios_new, size: 16),
-                  color: AppTheme.textSecondary,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-                const SizedBox(width: 12),
-                const Text(
-                  'Editar serviço',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1, thickness: 1, color: AppTheme.border),
+          AppBarInterna(titulo: 'Editar serviço'),
 
           // ── CONTEÚDO ────────────────────────────────
           Expanded(

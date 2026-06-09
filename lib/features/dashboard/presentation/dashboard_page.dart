@@ -14,47 +14,69 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final _vm = DashboardViewModel();
 
+  // ── Adicionar no topo da classe _DashboardPageState ──
+  late final PageController _pageController;
+
+  // ── Quantidade de serviços exibidos por página ──
+  // 👇 ALTERE ESTE VALOR para mudar quantos serviços aparecem por aba
+  static const int _servicosPorPagina = 3;
+
+  int _paginaAtual = 0;
+
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     _vm.carregar();
     _vm.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
+    _pageController.dispose();
     _vm.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // LINHA SUPERIOR
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // CARD: Serviços Pendentes
-              Expanded(child: _cardPendentes()),
-              const SizedBox(width: 20),
-              // CARD: Resumo Financeiro
-              SizedBox(width: 300, child: _cardFinanceiro()),
-            ],
-          ),
-          const SizedBox(height: 20),
-          // CARD: Gráfico
-          _cardGrafico(),
-        ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // LINHA SUPERIOR
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // CARD: Serviços Pendentes
+                Expanded(child: _cardPendentes()),
+                const SizedBox(width: 20),
+                // CARD: Resumo Financeiro
+                SizedBox(width: 300, child: _cardFinanceiro()),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // CARD: Gráfico
+            _cardGrafico(),
+          ],
+        ),
       ),
     );
   }
 
   // ── CARD SERVIÇOS PENDENTES ──────────────────────────
   Widget _cardPendentes() {
+    // ── LÓGICA DE PAGINAÇÃO ──────────────────────────────
+    // 👇 Aqui os serviços são divididos em grupos de _servicosPorPagina
+    final todos = _vm.todosPendentes; // lista completa sem paginação do vm
+    final totalPaginas = (todos.length / _servicosPorPagina).ceil().clamp(
+      1,
+      999,
+    );
+    // ────────────────────────────────────────────────────
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.surface,
@@ -76,8 +98,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           const SizedBox(height: 16),
 
-          // Lista paginada
-          if (_vm.servicosPaginados.isEmpty)
+          if (todos.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
               child: Center(
@@ -88,31 +109,54 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             )
           else
-            ..._vm.servicosPaginados.map((s) => _itemServico(s)),
+            // PageView horizontal — cada página exibe _servicosPorPagina itens
+            SizedBox(
+              // Altura dinâmica: _servicosPorPagina × altura de cada item (≈ 57px)
+              height: _servicosPorPagina * 70.0,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: totalPaginas,
+                onPageChanged: (p) => setState(() => _paginaAtual = p),
+                itemBuilder: (context, pageIndex) {
+                  // ── Fatia dos serviços desta página ─────────────────
+                  // 👇 Aqui acontece o slice: pega só os itens da página atual
+                  final inicio = pageIndex * _servicosPorPagina;
+                  final fim = (inicio + _servicosPorPagina).clamp(
+                    0,
+                    todos.length,
+                  );
+                  final itensDaPagina = todos.sublist(inicio, fim);
+                  // ────────────────────────────────────────────────────
+
+                  return Column(
+                    children: itensDaPagina
+                        .map((s) => _itemServico(s))
+                        .toList(),
+                  );
+                },
+              ),
+            ),
 
           const SizedBox(height: 8),
 
           // Dots de paginação
-          if (_vm.totalPaginas > 1)
+          if (totalPaginas > 1)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_vm.totalPaginas, (i) {
-                final ativo = i == _vm.paginaAtual;
+              children: List.generate(totalPaginas, (i) {
+                final ativo = i == _paginaAtual;
                 return GestureDetector(
-                  onTap: () => setState(() {
-                    if (i > _vm.paginaAtual) {
-                      _vm.proximaPagina();
-                    } else {
-                      _vm.paginaAnterior();
-                    }
-                  }),
+                  onTap: () => _pageController.animateToPage(
+                    i,
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
+                  ),
                   child: Container(
                     width: 8,
                     height: 8,
                     margin: const EdgeInsets.symmetric(horizontal: 3),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      // Dot ativo: azul #2563EB | inativo: cinza #D1D5DB
                       color: ativo ? AppTheme.primary : const Color(0xFFD1D5DB),
                     ),
                   ),
