@@ -482,18 +482,6 @@ class $ServicosTable extends Servicos with TableInfo<$ServicosTable, Servico> {
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
-  static const VerificationMeta _statusPagamentoMeta = const VerificationMeta(
-    'statusPagamento',
-  );
-  @override
-  late final GeneratedColumn<int> statusPagamento = GeneratedColumn<int>(
-    'status_pagamento',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
   static const VerificationMeta _clienteIdMeta = const VerificationMeta(
     'clienteId',
   );
@@ -514,7 +502,6 @@ class $ServicosTable extends Servicos with TableInfo<$ServicosTable, Servico> {
     valor,
     dataCriacao,
     statusServico,
-    statusPagamento,
     clienteId,
   ];
   @override
@@ -590,15 +577,6 @@ class $ServicosTable extends Servicos with TableInfo<$ServicosTable, Servico> {
         ),
       );
     }
-    if (data.containsKey('status_pagamento')) {
-      context.handle(
-        _statusPagamentoMeta,
-        statusPagamento.isAcceptableOrUnknown(
-          data['status_pagamento']!,
-          _statusPagamentoMeta,
-        ),
-      );
-    }
     if (data.containsKey('cliente_id')) {
       context.handle(
         _clienteIdMeta,
@@ -644,10 +622,6 @@ class $ServicosTable extends Servicos with TableInfo<$ServicosTable, Servico> {
         DriftSqlType.int,
         data['${effectivePrefix}status_servico'],
       )!,
-      statusPagamento: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}status_pagamento'],
-      )!,
       clienteId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}cliente_id'],
@@ -669,7 +643,6 @@ class Servico extends DataClass implements Insertable<Servico> {
   final double valor;
   final DateTime dataCriacao;
   final int statusServico;
-  final int statusPagamento;
   final int clienteId;
   const Servico({
     required this.id,
@@ -679,7 +652,6 @@ class Servico extends DataClass implements Insertable<Servico> {
     required this.valor,
     required this.dataCriacao,
     required this.statusServico,
-    required this.statusPagamento,
     required this.clienteId,
   });
   @override
@@ -692,7 +664,6 @@ class Servico extends DataClass implements Insertable<Servico> {
     map['valor'] = Variable<double>(valor);
     map['data_criacao'] = Variable<DateTime>(dataCriacao);
     map['status_servico'] = Variable<int>(statusServico);
-    map['status_pagamento'] = Variable<int>(statusPagamento);
     map['cliente_id'] = Variable<int>(clienteId);
     return map;
   }
@@ -706,7 +677,6 @@ class Servico extends DataClass implements Insertable<Servico> {
       valor: Value(valor),
       dataCriacao: Value(dataCriacao),
       statusServico: Value(statusServico),
-      statusPagamento: Value(statusPagamento),
       clienteId: Value(clienteId),
     );
   }
@@ -724,7 +694,6 @@ class Servico extends DataClass implements Insertable<Servico> {
       valor: serializer.fromJson<double>(json['valor']),
       dataCriacao: serializer.fromJson<DateTime>(json['dataCriacao']),
       statusServico: serializer.fromJson<int>(json['statusServico']),
-      statusPagamento: serializer.fromJson<int>(json['statusPagamento']),
       clienteId: serializer.fromJson<int>(json['clienteId']),
     );
   }
@@ -739,7 +708,6 @@ class Servico extends DataClass implements Insertable<Servico> {
       'valor': serializer.toJson<double>(valor),
       'dataCriacao': serializer.toJson<DateTime>(dataCriacao),
       'statusServico': serializer.toJson<int>(statusServico),
-      'statusPagamento': serializer.toJson<int>(statusPagamento),
       'clienteId': serializer.toJson<int>(clienteId),
     };
   }
@@ -752,7 +720,6 @@ class Servico extends DataClass implements Insertable<Servico> {
     double? valor,
     DateTime? dataCriacao,
     int? statusServico,
-    int? statusPagamento,
     int? clienteId,
   }) => Servico(
     id: id ?? this.id,
@@ -762,7 +729,6 @@ class Servico extends DataClass implements Insertable<Servico> {
     valor: valor ?? this.valor,
     dataCriacao: dataCriacao ?? this.dataCriacao,
     statusServico: statusServico ?? this.statusServico,
-    statusPagamento: statusPagamento ?? this.statusPagamento,
     clienteId: clienteId ?? this.clienteId,
   );
   Servico copyWithCompanion(ServicosCompanion data) {
@@ -782,9 +748,6 @@ class Servico extends DataClass implements Insertable<Servico> {
       statusServico: data.statusServico.present
           ? data.statusServico.value
           : this.statusServico,
-      statusPagamento: data.statusPagamento.present
-          ? data.statusPagamento.value
-          : this.statusPagamento,
       clienteId: data.clienteId.present ? data.clienteId.value : this.clienteId,
     );
   }
@@ -799,7 +762,6 @@ class Servico extends DataClass implements Insertable<Servico> {
           ..write('valor: $valor, ')
           ..write('dataCriacao: $dataCriacao, ')
           ..write('statusServico: $statusServico, ')
-          ..write('statusPagamento: $statusPagamento, ')
           ..write('clienteId: $clienteId')
           ..write(')'))
         .toString();
@@ -814,7 +776,6 @@ class Servico extends DataClass implements Insertable<Servico> {
     valor,
     dataCriacao,
     statusServico,
-    statusPagamento,
     clienteId,
   );
   @override
@@ -828,7 +789,6 @@ class Servico extends DataClass implements Insertable<Servico> {
           other.valor == this.valor &&
           other.dataCriacao == this.dataCriacao &&
           other.statusServico == this.statusServico &&
-          other.statusPagamento == this.statusPagamento &&
           other.clienteId == this.clienteId);
 }
 
@@ -840,7 +800,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
   final Value<double> valor;
   final Value<DateTime> dataCriacao;
   final Value<int> statusServico;
-  final Value<int> statusPagamento;
   final Value<int> clienteId;
   const ServicosCompanion({
     this.id = const Value.absent(),
@@ -850,7 +809,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
     this.valor = const Value.absent(),
     this.dataCriacao = const Value.absent(),
     this.statusServico = const Value.absent(),
-    this.statusPagamento = const Value.absent(),
     this.clienteId = const Value.absent(),
   });
   ServicosCompanion.insert({
@@ -861,7 +819,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
     required double valor,
     required DateTime dataCriacao,
     this.statusServico = const Value.absent(),
-    this.statusPagamento = const Value.absent(),
     required int clienteId,
   }) : nomeProduto = Value(nomeProduto),
        tipoServico = Value(tipoServico),
@@ -877,7 +834,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
     Expression<double>? valor,
     Expression<DateTime>? dataCriacao,
     Expression<int>? statusServico,
-    Expression<int>? statusPagamento,
     Expression<int>? clienteId,
   }) {
     return RawValuesInsertable({
@@ -888,7 +844,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
       if (valor != null) 'valor': valor,
       if (dataCriacao != null) 'data_criacao': dataCriacao,
       if (statusServico != null) 'status_servico': statusServico,
-      if (statusPagamento != null) 'status_pagamento': statusPagamento,
       if (clienteId != null) 'cliente_id': clienteId,
     });
   }
@@ -901,7 +856,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
     Value<double>? valor,
     Value<DateTime>? dataCriacao,
     Value<int>? statusServico,
-    Value<int>? statusPagamento,
     Value<int>? clienteId,
   }) {
     return ServicosCompanion(
@@ -912,7 +866,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
       valor: valor ?? this.valor,
       dataCriacao: dataCriacao ?? this.dataCriacao,
       statusServico: statusServico ?? this.statusServico,
-      statusPagamento: statusPagamento ?? this.statusPagamento,
       clienteId: clienteId ?? this.clienteId,
     );
   }
@@ -941,9 +894,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
     if (statusServico.present) {
       map['status_servico'] = Variable<int>(statusServico.value);
     }
-    if (statusPagamento.present) {
-      map['status_pagamento'] = Variable<int>(statusPagamento.value);
-    }
     if (clienteId.present) {
       map['cliente_id'] = Variable<int>(clienteId.value);
     }
@@ -960,7 +910,6 @@ class ServicosCompanion extends UpdateCompanion<Servico> {
           ..write('valor: $valor, ')
           ..write('dataCriacao: $dataCriacao, ')
           ..write('statusServico: $statusServico, ')
-          ..write('statusPagamento: $statusPagamento, ')
           ..write('clienteId: $clienteId')
           ..write(')'))
         .toString();
@@ -1195,7 +1144,6 @@ typedef $$ServicosTableCreateCompanionBuilder =
       required double valor,
       required DateTime dataCriacao,
       Value<int> statusServico,
-      Value<int> statusPagamento,
       required int clienteId,
     });
 typedef $$ServicosTableUpdateCompanionBuilder =
@@ -1207,7 +1155,6 @@ typedef $$ServicosTableUpdateCompanionBuilder =
       Value<double> valor,
       Value<DateTime> dataCriacao,
       Value<int> statusServico,
-      Value<int> statusPagamento,
       Value<int> clienteId,
     });
 
@@ -1252,11 +1199,6 @@ class $$ServicosTableFilterComposer
 
   ColumnFilters<int> get statusServico => $composableBuilder(
     column: $table.statusServico,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get statusPagamento => $composableBuilder(
-    column: $table.statusPagamento,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1310,11 +1252,6 @@ class $$ServicosTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get statusPagamento => $composableBuilder(
-    column: $table.statusPagamento,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<int> get clienteId => $composableBuilder(
     column: $table.clienteId,
     builder: (column) => ColumnOrderings(column),
@@ -1359,11 +1296,6 @@ class $$ServicosTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get statusPagamento => $composableBuilder(
-    column: $table.statusPagamento,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<int> get clienteId =>
       $composableBuilder(column: $table.clienteId, builder: (column) => column);
 }
@@ -1403,7 +1335,6 @@ class $$ServicosTableTableManager
                 Value<double> valor = const Value.absent(),
                 Value<DateTime> dataCriacao = const Value.absent(),
                 Value<int> statusServico = const Value.absent(),
-                Value<int> statusPagamento = const Value.absent(),
                 Value<int> clienteId = const Value.absent(),
               }) => ServicosCompanion(
                 id: id,
@@ -1413,7 +1344,6 @@ class $$ServicosTableTableManager
                 valor: valor,
                 dataCriacao: dataCriacao,
                 statusServico: statusServico,
-                statusPagamento: statusPagamento,
                 clienteId: clienteId,
               ),
           createCompanionCallback:
@@ -1425,7 +1355,6 @@ class $$ServicosTableTableManager
                 required double valor,
                 required DateTime dataCriacao,
                 Value<int> statusServico = const Value.absent(),
-                Value<int> statusPagamento = const Value.absent(),
                 required int clienteId,
               }) => ServicosCompanion.insert(
                 id: id,
@@ -1435,7 +1364,6 @@ class $$ServicosTableTableManager
                 valor: valor,
                 dataCriacao: dataCriacao,
                 statusServico: statusServico,
-                statusPagamento: statusPagamento,
                 clienteId: clienteId,
               ),
           withReferenceMapper: (p0) => p0

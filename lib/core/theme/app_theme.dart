@@ -28,6 +28,7 @@ class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: primary,
       surface: surface,
+      // ignore: deprecated_member_use
       background: background,
     ),
     cardTheme: CardThemeData(
@@ -44,7 +45,7 @@ class AppTheme {
   // ── SOMBRA DOS CARDS ──────────────────────────────────
   static List<BoxShadow> get cardShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.07),
+      color: Colors.black.withValues(alpha: 0.07),
       blurRadius: 12,
       offset: const Offset(0, 2),
     ),

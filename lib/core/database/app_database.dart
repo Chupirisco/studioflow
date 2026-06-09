@@ -24,8 +24,7 @@ class Servicos extends Table {
   DateTimeColumn get dataCriacao => dateTime()();
   // statusServico: 0=Pendente, 1=Finalizado
   IntColumn get statusServico => integer().withDefault(const Constant(0))();
-  // statusPagamento: 0=NaoPago, 1=Pago
-  IntColumn get statusPagamento => integer().withDefault(const Constant(0))();
+
   IntColumn get clienteId => integer().references(Clientes, #id)();
 }
 
@@ -80,17 +79,19 @@ class AppDatabase extends _$AppDatabase {
 
   // ── DASHBOARD ─────────────────────────────────────────
 
+  // Total recebido = serviços com statusServico == 1 (Finalizado)
   Future<double> getTotalRecebido() async {
     final rows = await (select(
       servicos,
-    )..where((s) => s.statusPagamento.equals(1))).get();
+    )..where((s) => s.statusServico.equals(1))).get();
     return rows.fold<double>(0.0, (sum, s) => sum + s.valor);
   }
 
+  // Total a receber = serviços com statusServico == 0 (Pendente)
   Future<double> getTotalAReceber() async {
     final rows = await (select(
       servicos,
-    )..where((s) => s.statusPagamento.equals(0))).get();
+    )..where((s) => s.statusServico.equals(0))).get();
     return rows.fold<double>(0.0, (sum, s) => sum + s.valor);
   }
 }
