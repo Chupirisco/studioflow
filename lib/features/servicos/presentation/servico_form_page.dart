@@ -262,7 +262,7 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // ── EMPRESA (autocomplete) ─────────────
-                      _buildLabel('Empresa'),
+                      _buildLabel('Empresa*'),
                       const SizedBox(height: 6),
                       _buildEmpresaField(),
                       const SizedBox(height: 16),
@@ -285,7 +285,7 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
                       const SizedBox(height: 16),
 
                       // ── NOME DO PRODUTO ────────────────────
-                      _buildLabel('Nome do produto'),
+                      _buildLabel('Nome do produto*'),
                       const SizedBox(height: 6),
                       TextFormField(
                         controller: _nomeProdutoController,
@@ -345,11 +345,17 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
                                 items: const [
                                   DropdownMenuItem(
                                     value: 0,
-                                    child: Text('Pendente'),
+                                    child: Text(
+                                      'Pendente',
+                                      style: TextStyle(color: AppTheme.amber),
+                                    ),
                                   ),
                                   DropdownMenuItem(
                                     value: 1,
-                                    child: Text('Finalizado'),
+                                    child: Text(
+                                      'Finalizado',
+                                      style: TextStyle(color: AppTheme.green),
+                                    ),
                                   ),
                                 ],
                                 onChanged: (v) {
@@ -357,9 +363,6 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
                                     setState(() => _statusServico = v);
                                   }
                                 },
-                                valueColor: _statusServico == 0
-                                    ? AppTheme.amber
-                                    : AppTheme.green,
                               ),
                             ],
                           ),
@@ -375,20 +378,30 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
                                 items: const [
                                   DropdownMenuItem(
                                     value: 0,
-                                    child: Text('Criação'),
+                                    child: Text(
+                                      'Criação',
+                                      style: TextStyle(color: AppTheme.green),
+                                    ),
                                   ),
                                   DropdownMenuItem(
                                     value: 1,
-                                    child: Text('Alteração'),
+                                    child: Text(
+                                      'Alteração',
+                                      style: TextStyle(color: AppTheme.primary),
+                                    ),
                                   ),
                                   DropdownMenuItem(
                                     value: 2,
-                                    child: Text('Correção'),
+                                    child: Text(
+                                      'Correção',
+                                      style: TextStyle(color: AppTheme.amber),
+                                    ),
                                   ),
                                 ],
                                 onChanged: (v) {
-                                  if (v != null)
+                                  if (v != null) {
                                     setState(() => _tipoServico = v);
+                                  }
                                 },
                               ),
                             ],

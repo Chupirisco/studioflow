@@ -76,6 +76,7 @@ class _ServicosPageState extends State<ServicosPage> {
               const SizedBox(width: 12),
 
               Container(
+                width: 125,
                 height: 42,
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(

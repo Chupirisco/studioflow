@@ -72,7 +72,7 @@ class _ClienteFormPageState extends State<ClienteFormPage> {
             padding: EdgeInsets.zero,
             children: [
               // ── TOPBAR ──────────────────────────────────
-              AppBarInterna(titulo: 'Cadastrar cliente'),
+              AppBarInterna(titulo: 'Cadastrar cliente*'),
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: Form(
@@ -90,7 +90,7 @@ class _ClienteFormPageState extends State<ClienteFormPage> {
                       ),
                       const SizedBox(height: 16),
                       _buildField(
-                        label: 'Nome da empresa',
+                        label: 'Nome da empresa*',
                         controller: _empresaController,
                         hint: 'Ex.: Empresa Y',
                         validator: (v) => (v == null || v.trim().isEmpty)
@@ -98,21 +98,25 @@ class _ClienteFormPageState extends State<ClienteFormPage> {
                             : null,
                       ),
                       const SizedBox(height: 16),
-                      _buildField(
-                        label: 'Nº de telefone',
-                        controller: _telefoneController,
-                        hint: '(00) 00000-0000',
-                        keyboardType: TextInputType.phone,
-                        formatters: [_telefoneMask],
-                        validator: (v) {
-                          if (v == null || v.trim().isEmpty) {
-                            return 'Informe o telefone';
-                          }
-                          if (_telefoneMask.getUnmaskedText().length < 10) {
-                            return 'Telefone inválido';
-                          }
-                          return null;
-                        },
+                      SizedBox(
+                        width:
+                            150, // 👈 largura fixa — ajuste conforme preferir
+                        child: _buildField(
+                          label: 'Nº de telefone*',
+                          controller: _telefoneController,
+                          hint: '(00) 00000-0000',
+                          keyboardType: TextInputType.phone,
+                          formatters: [_telefoneMask],
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) {
+                              return 'Informe o telefone';
+                            }
+                            if (_telefoneMask.getUnmaskedText().length < 10) {
+                              return 'Telefone inválido';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
                       const SizedBox(height: 16),
                       _buildField(

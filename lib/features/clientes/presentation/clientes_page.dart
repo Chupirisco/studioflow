@@ -75,6 +75,7 @@ class _ClientesPageState extends State<ClientesPage> {
               const SizedBox(width: 12),
 
               Container(
+                width: 125,
                 height: 42,
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
@@ -143,7 +144,7 @@ class _ClientesPageState extends State<ClientesPage> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
 
           // ── GRID DE CLIENTES ─────────────────────────
           Expanded(

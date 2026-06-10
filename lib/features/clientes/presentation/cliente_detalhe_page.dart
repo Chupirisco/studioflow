@@ -288,9 +288,7 @@ class _ClienteDetalhePageState extends State<ClienteDetalhePage> {
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
-                                          color: _ativo
-                                              ? AppTheme.green
-                                              : AppTheme.textSecondary,
+                                          color: AppTheme.green,
                                         ),
                                       ),
                                     ),
@@ -301,7 +299,7 @@ class _ClienteDetalhePageState extends State<ClienteDetalhePage> {
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
-                                          color: AppTheme.textSecondary,
+                                          color: AppTheme.amber,
                                         ),
                                       ),
                                     ),
