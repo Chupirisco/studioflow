@@ -159,11 +159,11 @@ class _ServicosPageState extends State<ServicosPage> {
                 : GridView.builder(
                     clipBehavior: Clip.none,
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 16,
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 400,
                           mainAxisSpacing: 16,
-                          childAspectRatio: 1.35,
+                          crossAxisSpacing: 16,
+                          mainAxisExtent: 250,
                         ),
                     itemCount: _vm.servicos.length,
                     itemBuilder: (context, i) =>

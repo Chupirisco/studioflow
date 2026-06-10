@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/theme/app_theme.dart';
 import 'dashboard_viewmodel.dart';
+import 'package:flutter/gestures.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -111,29 +112,55 @@ class _DashboardPageState extends State<DashboardPage> {
           else
             // PageView horizontal — cada página exibe _servicosPorPagina itens
             SizedBox(
-              // Altura dinâmica: _servicosPorPagina × altura de cada item (≈ 57px)
+              // Altura dinâmica: _servicosPorPagina × altura de cada item
               height: _servicosPorPagina * 70.0,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: totalPaginas,
-                onPageChanged: (p) => setState(() => _paginaAtual = p),
-                itemBuilder: (context, pageIndex) {
-                  // ── Fatia dos serviços desta página ─────────────────
-                  // 👇 Aqui acontece o slice: pega só os itens da página atual
-                  final inicio = pageIndex * _servicosPorPagina;
-                  final fim = (inicio + _servicosPorPagina).clamp(
-                    0,
-                    todos.length,
-                  );
-                  final itensDaPagina = todos.sublist(inicio, fim);
-                  // ────────────────────────────────────────────────────
-
-                  return Column(
-                    children: itensDaPagina
-                        .map((s) => _itemServico(s))
-                        .toList(),
-                  );
+              child: // Listener captura scroll do mouse sobre o card
+              Listener(
+                onPointerSignal: (event) {
+                  if (event is PointerScrollEvent) {
+                    // Scroll pra baixo (deltaY > 0) → próxima aba
+                    // Scroll pra cima  (deltaY < 0) → aba anterior
+                    if (event.scrollDelta.dy > 0) {
+                      _pageController.nextPage(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeInOut,
+                      );
+                    } else {
+                      _pageController.previousPage(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  }
                 },
+                child: SizedBox(
+                  height: _servicosPorPagina * 70.0,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    // ScrollPhysics que resolve o conflito com o SingleChildScrollView pai
+                    physics: const PageScrollPhysics(),
+                    itemCount: totalPaginas,
+                    onPageChanged: (p) => setState(() => _paginaAtual = p),
+                    itemBuilder: (context, pageIndex) {
+                      // ── Fatia dos serviços desta página ─────────────────
+                      // 👇 Aqui acontece o slice: pega só os itens da página atual
+                      final inicio = pageIndex * _servicosPorPagina;
+                      final fim = (inicio + _servicosPorPagina).clamp(
+                        0,
+                        todos.length,
+                      );
+                      final itensDaPagina = todos.sublist(inicio, fim);
+                      // ────────────────────────────────────────────────────
+
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: itensDaPagina
+                            .map((s) => _itemServico(s))
+                            .toList(),
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
 
