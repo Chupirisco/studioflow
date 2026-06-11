@@ -1,7 +1,12 @@
+import 'dart:io';
 import 'package:drift/drift.dart';
-import 'package:drift_flutter/drift_flutter.dart';
+import 'package:drift/native.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 part 'app_database.g.dart';
+
+// comando para gerar o código drift: dart run build_runner build
 
 // Tabela de Clientes
 class Clientes extends Table {
@@ -24,7 +29,6 @@ class Servicos extends Table {
   DateTimeColumn get dataCriacao => dateTime()();
   // statusServico: 0=Pendente, 1=Finalizado
   IntColumn get statusServico => integer().withDefault(const Constant(0))();
-
   IntColumn get clienteId => integer().references(Clientes, #id)();
 }
 
@@ -36,11 +40,24 @@ class AppDatabase extends _$AppDatabase {
   int get schemaVersion => 1;
 
   static QueryExecutor _openConnection() {
-    return driftDatabase(name: 'studioflow');
+    // LazyDatabase permite usar async para resolver o caminho dinamicamente
+    // sem precisar mudar o construtor do AppDatabase
+    return LazyDatabase(() async {
+      // Retorna o AppData\Roaming do usuário atual
+      // Resultado: C:\Users\<usuario>\AppData\Roaming\com.studioflow\studioflow
+      final dir = await getApplicationSupportDirectory();
+
+      // Garante que a pasta existe antes de criar o banco
+      if (!await Directory(dir.path).exists()) {
+        await Directory(dir.path).create(recursive: true);
+      }
+
+      final dbPath = p.join(dir.path, 'studioflow.db');
+      return NativeDatabase(File(dbPath));
+    });
   }
 
   // ── CLIENTES ──────────────────────────────────────────
-
   Future<List<Cliente>> getAllClientes() =>
       (select(clientes)..orderBy([(c) => OrderingTerm.asc(c.nome)])).get();
 
@@ -57,7 +74,6 @@ class AppDatabase extends _$AppDatabase {
       (delete(clientes)..where((c) => c.id.equals(id))).go();
 
   // ── SERVIÇOS ──────────────────────────────────────────
-
   Future<List<Servico>> getAllServicos() => (select(
     servicos,
   )..orderBy([(s) => OrderingTerm.desc(s.dataCriacao)])).get();

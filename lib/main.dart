@@ -5,6 +5,7 @@ import 'shared/widgets/app_shell.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   setupServiceLocator();
   runApp(const StudioFlowApp());
 }
