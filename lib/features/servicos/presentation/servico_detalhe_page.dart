@@ -85,87 +85,99 @@ class _ServicoDetalhePageState extends State<ServicoDetalhePage> {
   }
 
   Future<void> _confirmarExclusao() async {
-    final confirmar = await showDialog<bool>(
+    showDialog(
       context: context,
-      builder: (_) => Dialog(
+      barrierColor: Colors.black.withValues(alpha: 0.35),
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Deseja excluir esse serviço?',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+        contentPadding: const EdgeInsets.fromLTRB(28, 28, 28, 20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(
+                  fontSize: 15,
                   color: AppTheme.textPrimary,
                 ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Esta ação não tem volta!',
-                style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
-              ),
-              const SizedBox(height: 28),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 140,
+                  const TextSpan(text: 'Deseja excluir o serviço '),
+                  TextSpan(
+                    text: _servico.nomeProduto,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  const TextSpan(text: '?'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Esta ação não tem volta!',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
                     height: 44,
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context, false),
+                      onPressed: () => Navigator.pop(ctx),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primary,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        elevation: 0,
                       ),
                       child: const Text(
                         'Não',
                         style: TextStyle(
-                          color: Colors.white,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  SizedBox(
-                    width: 140,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: SizedBox(
                     height: 44,
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context, true),
+                      onPressed: () async {
+                        Navigator.pop(ctx);
+                        await _db.deleteServico(_servico.id);
+                        if (mounted) getIt<AppNavigator>().voltar();
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.amber,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        elevation: 0,
                       ),
                       child: const Text(
                         'Sim',
                         style: TextStyle(
-                          color: Colors.white,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
-
-    if (confirmar == true) {
-      await _db.deleteServico(_servico.id);
-      if (mounted) getIt<AppNavigator>().voltar();
-    }
   }
 
   @override
@@ -194,7 +206,7 @@ class _ServicoDetalhePageState extends State<ServicoDetalhePage> {
                   _campoReadOnly(_cliente?.nome ?? '—'),
                   const SizedBox(height: 16),
 
-                  _labelCampo('Nome do produto'),
+                  _labelCampo('Nome do produto*'),
                   const SizedBox(height: 6),
                   _campoEditavel(_produtoCtrl, 'Ex: Embalagem linha premium'),
                   const SizedBox(height: 16),
@@ -227,11 +239,17 @@ class _ServicoDetalhePageState extends State<ServicoDetalhePage> {
                             items: const [
                               DropdownMenuItem(
                                 value: 0,
-                                child: Text('Pendente'),
+                                child: Text(
+                                  'Pendente',
+                                  style: TextStyle(color: AppTheme.amber),
+                                ),
                               ),
                               DropdownMenuItem(
                                 value: 1,
-                                child: Text('Finalizado'),
+                                child: Text(
+                                  'Finalizado',
+                                  style: TextStyle(color: AppTheme.green),
+                                ),
                               ),
                             ],
                             onChanged: (v) =>
@@ -252,15 +270,24 @@ class _ServicoDetalhePageState extends State<ServicoDetalhePage> {
                             items: const [
                               DropdownMenuItem(
                                 value: 0,
-                                child: Text('Criação'),
+                                child: Text(
+                                  'Criação',
+                                  style: TextStyle(color: AppTheme.green),
+                                ),
                               ),
                               DropdownMenuItem(
                                 value: 1,
-                                child: Text('Alteração'),
+                                child: Text(
+                                  'Alteração',
+                                  style: TextStyle(color: AppTheme.primary),
+                                ),
                               ),
                               DropdownMenuItem(
                                 value: 2,
-                                child: Text('Correção'),
+                                child: Text(
+                                  'Correção',
+                                  style: TextStyle(color: AppTheme.amber),
+                                ),
                               ),
                             ],
                             onChanged: (v) =>

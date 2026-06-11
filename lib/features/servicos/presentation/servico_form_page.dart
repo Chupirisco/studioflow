@@ -155,7 +155,11 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
   void _filtrarEmpresas(String texto) {
     setState(() {
       _empresasFiltradas = _todosClientes
-          .where((c) => c.empresa.toLowerCase().contains(texto.toLowerCase()))
+          .where(
+            (c) =>
+                c.empresa.toLowerCase().contains(texto.toLowerCase()) ||
+                c.nome.toLowerCase().contains(texto.toLowerCase()),
+          )
           .toList();
     });
     _abrirOverlay();
